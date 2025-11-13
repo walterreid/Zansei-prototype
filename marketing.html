@@ -1,0 +1,595 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ad101 - Marketing Challenge Assistant</title>
+    <link rel="icon" type="image/png" href="ZanNg.png">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+        }
+
+        .challenge-section {
+            padding: 60px 20px;
+            text-align: center;
+        }
+
+        .challenge-section h1 {
+            color: white;
+            font-size: 3rem;
+            margin-bottom: 20px;
+            font-weight: 600;
+        }
+
+        .challenge-section p {
+            color: rgba(255, 255, 255, 0.9);
+            font-size: 1.3rem;
+            margin-bottom: 50px;
+        }
+
+        .challenge-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 20px;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        .challenge-card {
+            background: white;
+            border-radius: 16px;
+            padding: 40px 30px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .challenge-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+        }
+
+        .challenge-card.active {
+            background: #f0f4ff;
+            border: 2px solid #667eea;
+        }
+
+        .challenge-icon {
+            font-size: 3rem;
+            margin-bottom: 20px;
+        }
+
+        .challenge-card h3 {
+            font-size: 1.4rem;
+            margin-bottom: 15px;
+            color: #1a202c;
+        }
+
+        .challenge-card p {
+            font-size: 1rem;
+            color: #718096;
+            line-height: 1.5;
+        }
+
+        .chat-container {
+            background: white;
+            max-width: 1200px;
+            margin: 40px auto;
+            border-radius: 16px;
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
+            overflow: hidden;
+            display: block;
+        }
+
+        .chat-header {
+            background: white;
+            padding: 20px 30px;
+            border-bottom: 1px solid #e2e8f0;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .chat-header h2 {
+            font-size: 1.5rem;
+            color: #1a202c;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .chat-header img {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            object-fit: cover;
+        }
+
+        .chat-header-icons {
+            display: flex;
+            gap: 15px;
+            color: #718096;
+        }
+
+        .icon-btn {
+            cursor: pointer;
+            font-size: 1.2rem;
+            transition: color 0.2s;
+        }
+
+        .icon-btn:hover {
+            color: #667eea;
+        }
+
+        .chat-content-wrapper {
+            display: flex;
+            min-height: 500px;
+        }
+
+        .chat-messages {
+            flex: 1;
+            height: 500px;
+            padding: 30px;
+            background: #f7fafc;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-start;
+            align-items: flex-start;
+        }
+
+        .assistant-message {
+            background: white;
+            padding: 12px 18px;
+            border-radius: 12px;
+            max-width: 550px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+            text-align: left;
+            margin-left: 12px;
+        }
+
+        .message-header {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            flex-shrink: 0;
+        }
+
+        .message-header img {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            object-fit: cover;
+        }
+
+        .message-header .chat-name {
+            font-weight: 600;
+            color: #1a202c;
+            font-size: 0.95rem;
+        }
+
+        .assistant-message .greeting {
+            font-size: 0.9rem;
+            color: #1a202c;
+            line-height: 1.5;
+            margin-bottom: 0;
+        }
+
+        .user-message {
+            background: #667eea;
+            color: white;
+            padding: 12px 18px;
+            border-radius: 12px;
+            max-width: 500px;
+            margin-left: auto;
+            margin-bottom: 15px;
+            text-align: left;
+            font-size: 0.9rem;
+        }
+
+        .message-bubble {
+            margin-bottom: 15px;
+            display: flex;
+            flex-direction: row;
+        }
+
+        .message-bubble.user {
+            align-items: flex-end;
+            flex-direction: row-reverse;
+        }
+
+        .message-bubble.assistant {
+            align-items: flex-start;
+        }
+
+        .outcome-preview {
+            width: 400px;
+            height: 500px;
+            background: #f7fafc;
+            border-left: 2px solid #e2e8f0;
+            padding: 30px;
+            overflow-y: auto;
+            display: block;
+        }
+
+        .outcome-preview h3 {
+            color: #1a202c;
+            font-size: 1.1rem;
+            margin-bottom: 15px;
+            text-align: left;
+            font-weight: 600;
+        }
+
+        .outcome-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            grid-template-rows: repeat(3, auto);
+            gap: 12px;
+        }
+
+        .outcome-item {
+            background: white;
+            padding: 15px;
+            border-radius: 8px;
+            border-left: 4px solid #667eea;
+        }
+
+        .outcome-item h4 {
+            color: #667eea;
+            font-size: 0.85rem;
+            margin-bottom: 6px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-weight: 600;
+        }
+
+        .outcome-item p {
+            color: #718096;
+            font-size: 0.75rem;
+            line-height: 1.4;
+        }
+
+        .wave-emoji {
+            display: inline-block;
+            animation: wave 1s ease-in-out infinite;
+        }
+
+        @keyframes wave {
+            0%, 100% { transform: rotate(0deg); }
+            25% { transform: rotate(20deg); }
+            75% { transform: rotate(-20deg); }
+        }
+
+        .chat-input-area {
+            padding: 20px 30px;
+            background: white;
+            border-top: 1px solid #e2e8f0;
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+
+        .chat-input {
+            flex: 1;
+            padding: 15px 20px;
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            font-size: 1rem;
+            outline: none;
+            transition: border-color 0.2s;
+        }
+
+        .chat-input:focus {
+            border-color: #667eea;
+        }
+
+        .send-btn {
+            background: #667eea;
+            color: white;
+            border: none;
+            padding: 15px 25px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1rem;
+            transition: background 0.2s;
+        }
+
+        .send-btn:hover {
+            background: #5568d3;
+        }
+
+        .back-btn {
+            background: white;
+            color: #667eea;
+            border: 2px solid #667eea;
+            padding: 12px 30px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1rem;
+            margin: 20px auto;
+            display: block;
+            transition: all 0.2s;
+            text-decoration: none;
+            max-width: 1200px;
+            width: fit-content;
+        }
+
+        .back-btn:hover {
+            background: #667eea;
+            color: white;
+        }
+
+        @media (max-width: 768px) {
+            .chat-content-wrapper {
+                flex-direction: column;
+                min-height: auto;
+            }
+
+            .chat-messages {
+                height: 400px;
+                padding: 20px;
+            }
+
+            .outcome-preview {
+                width: 100%;
+                height: auto;
+                border-left: none;
+                border-top: 2px solid #e2e8f0;
+            }
+
+            .outcome-grid {
+                grid-template-columns: 1fr;
+                grid-template-rows: auto;
+            }
+        }
+    </style>
+</head>
+<body>
+    <a href="index.html#diagnostic" class="back-btn">← Back to Assessment</a>
+    <div id="chatContainer" class="chat-container">
+        <div class="chat-header">
+            <h2>
+                <img src="ZanNg.png" alt="Zan Ng" id="chatHeaderImage">
+                <span id="chatTitle">Zansei</span>
+            </h2>
+            <div class="chat-header-icons">
+                <span class="icon-btn">🕐</span>
+                <span class="icon-btn">⚙️</span>
+            </div>
+        </div>
+        
+        <div class="chat-content-wrapper">
+            <div class="chat-messages">
+                <div class="message-bubble assistant">
+                    <div class="message-header"><img src="ZanNg.png" alt="Zan Ng"><span class="chat-name">Zansei</span></div>
+                    <div class="assistant-message">
+                        <p class="greeting">
+                            <span class="wave-emoji">👋</span> Hi! I'm Zansei, your AI advertising consultant. I can help you create effective marketing strategies, analyze your business, generate creative ad concepts, and plan your advertising budget. What would you like to start with?
+                        </p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="outcome-preview">
+                <h3>📊 Your Report Will Include:</h3>
+                <div class="outcome-grid" id="outcomeGrid">
+                    <!-- Dynamically populated based on selected challenge -->
+                </div>
+            </div>
+        </div>
+        
+        <div class="chat-input-area">
+            <input 
+                type="text" 
+                class="chat-input" 
+                placeholder="Ask Zansei about marketing strategies, ad creation, or business insights..."
+            />
+            <button class="send-btn">↑</button>
+        </div>
+    </div>
+
+
+    <script>
+        const challenges = {
+            customers: {
+                title: "Customer Acquisition Expert",
+                message: "<div class='message-header'><img src='ZanNg.png' alt='Zan Ng'><span class='chat-name'>Zansei</span></div><span class='wave-emoji'>👋</span> Hi! I'm Zansei, your Customer Acquisition Expert. I'll help you develop strategies to increase your sales, generate more leads, and drive foot traffic to your business. I can analyze your current customer funnel, identify gaps, and create targeted campaigns to reach new customers. What's your current biggest challenge in acquiring customers?",
+                followUp: "Excellent! Let's get started. We just need a little bit about your current customer acquisition efforts and we'll give you a comprehensive Customer Acquisition Strategy Report with actionable tactics to increase your sales and leads.",
+                outcomes: [
+                    { icon: "🎯", title: "Direct Response Channels", desc: "Google Search Ads, local service ads, and retargeting campaigns focused on immediate conversions" },
+                    { icon: "📈", title: "Conversion Optimization", desc: "Landing page strategy, A/B testing recommendations, and CTA optimization to maximize lead capture" },
+                    { icon: "💰", title: "Budget & ROI Tracking", desc: "Channel allocation with cost-per-acquisition targets and conversion tracking setup" },
+                    { icon: "🎁", title: "Lead Magnet Strategy", desc: "Compelling offers, discounts, and incentives designed to drive first-time purchases" },
+                    { icon: "📊", title: "Performance Metrics", desc: "KPIs focused on leads generated, cost per lead, and conversion rates by channel" },
+                    { icon: "⚡", title: "Quick-Win Tactics", desc: "Immediate actions to start generating leads within the first 2 weeks of campaign launch" }
+                ]
+            },
+            awareness: {
+                title: "Brand Awareness Expert",
+                message: "<div class='message-header'><img src='ZanNg.png' alt='Zan Ng'><span class='chat-name'>Zansei</span></div><span class='wave-emoji'>👋</span> Hi! I'm Zansei, your Brand Awareness Expert. I specialize in helping businesses get discovered by their target audience. I can help you build a strong online presence, develop content strategies, optimize your local SEO, and create campaigns that put your business on the map. Tell me about your business and who you're trying to reach!",
+                followUp: "Excellent! Let's get started. We just need a little bit about your business and target audience and we'll give you a Brand Visibility Action Plan with specific steps to get your business discovered.",
+                outcomes: [
+                    { icon: "📢", title: "Multi-Channel Presence", desc: "Social media strategy, display advertising, and PR outreach to maximize brand exposure" },
+                    { icon: "🗺️", title: "Local SEO Blueprint", desc: "Google Business Profile optimization, local citations, and review generation strategy" },
+                    { icon: "🤝", title: "Community Partnerships", desc: "Local sponsorships, event participation, and strategic collaborations to build visibility" },
+                    { icon: "📱", title: "Social Content Calendar", desc: "30-day content plan with post ideas, engagement tactics, and community-building strategies" },
+                    { icon: "📰", title: "PR & Media Strategy", desc: "Press release templates, local media contacts, and story angles to earn media coverage" },
+                    { icon: "📊", title: "Awareness Metrics", desc: "Tracking reach, impressions, brand searches, and share of voice in your local market" }
+                ]
+            },
+            retention: {
+                title: "Customer Retention Expert",
+                message: "<div class='message-header'><img src='ZanNg.png' alt='Zan Ng'><span class='chat-name'>Zansei</span></div><span class='wave-emoji'>👋</span> Hi! I'm Zansei, your Customer Retention Expert. I focus on building loyalty and keeping your customers coming back. I can help you create retention programs, develop email campaigns, design loyalty rewards, and analyze why customers might be leaving. Let's work on turning one-time buyers into lifelong fans. What's your current retention rate?",
+                followUp: "Excellent! Let's get started. We just need a little bit about your current customer relationships and we'll give you a Customer Loyalty Blueprint with proven strategies to keep customers coming back.",
+                outcomes: [
+                    { icon: "💌", title: "Email Automation Flows", desc: "Welcome series, win-back campaigns, and lifecycle emails to nurture existing customers" },
+                    { icon: "🎁", title: "Loyalty Program Design", desc: "Rewards structure, VIP tiers, and incentive programs that encourage repeat purchases" },
+                    { icon: "📱", title: "SMS & Push Strategy", desc: "Timely notifications for exclusive offers, restock alerts, and personalized recommendations" },
+                    { icon: "⭐", title: "Review & Referral System", desc: "Automated review requests and referral incentives to turn customers into advocates" },
+                    { icon: "📊", title: "Churn Analysis", desc: "Identifying at-risk customers and triggers for implementing retention interventions" },
+                    { icon: "🔄", title: "Re-engagement Tactics", desc: "Targeted campaigns to win back lapsed customers with compelling offers" }
+                ]
+            },
+            launch: {
+                title: "Product Launch Expert",
+                message: "<div class='message-header'><img src='ZanNg.png' alt='Zan Ng'><span class='chat-name'>Zansei</span></div><span class='wave-emoji'>👋</span> Hi! I'm Zansei, your Product Launch Expert. I specialize in creating buzz and momentum for new products and services. I can help you plan a launch timeline, develop pre-launch campaigns, create launch day strategies, and build post-launch follow-up plans. Tell me about what you're launching and when!",
+                followUp: "Excellent! Let's get started. We just need a little bit about what you're launching and your timeline and we'll give you a complete Product Launch Roadmap with pre-launch, launch day, and post-launch strategies.",
+                outcomes: [
+                    { icon: "📅", title: "Phased Launch Timeline", desc: "Week-by-week roadmap covering pre-launch (4-6 weeks), launch day, and post-launch momentum" },
+                    { icon: "🎭", title: "Teaser Campaign Strategy", desc: "Pre-launch content, sneak peeks, and countdown campaigns to build anticipation" },
+                    { icon: "🎉", title: "Launch Day Activation", desc: "Multi-channel blitz strategy with coordinated social posts, email blasts, and paid ads" },
+                    { icon: "👥", title: "Influencer & Partner Outreach", desc: "Collaboration strategy, seeding plan, and partnership activation for launch amplification" },
+                    { icon: "🎯", title: "Early Adopter Incentives", desc: "Exclusive offers, limited-time discounts, and VIP access to drive immediate sales" },
+                    { icon: "📈", title: "Post-Launch Momentum", desc: "Sustained marketing plan, user-generated content strategy, and optimization tactics" }
+                ]
+            },
+            competition: {
+                title: "Competitive Strategy Expert",
+                message: "<div class='message-header'><img src='ZanNg.png' alt='Zan Ng'><span class='chat-name'>Zansei</span></div><span class='wave-emoji'>👋</span> Hi! I'm Zansei, your Competitive Strategy Expert. I help smaller businesses compete effectively against big brands, even with limited budgets. I can help you find your unique positioning, identify underserved niches, develop guerrilla marketing tactics, and create campaigns that punch above their weight. Who are your main competitors?",
+                followUp: "Excellent! Let's get started. We just need a little bit about your competitors and your unique strengths and we'll give you a Competitive Advantage Report showing how to stand out and win customers from bigger brands.",
+                outcomes: [
+                    { icon: "🎯", title: "Niche Positioning Strategy", desc: "Unique value proposition and positioning that differentiates you from larger competitors" },
+                    { icon: "🗺️", title: "Hyper-Local Targeting", desc: "Geographic and demographic micro-targeting to dominate specific neighborhoods or segments" },
+                    { icon: "💡", title: "Guerrilla Marketing Tactics", desc: "Creative, low-cost strategies like street teams, viral content, and community stunts" },
+                    { icon: "📝", title: "Content Marketing Plan", desc: "Thought leadership, SEO-driven content, and educational resources to build authority" },
+                    { icon: "🤝", title: "Strategic Partnerships", desc: "Collaboration opportunities with complementary businesses to expand reach economically" },
+                    { icon: "⚔️", title: "Competitive Analysis", desc: "Competitor channel breakdown, budget estimates, and gaps you can exploit" }
+                ]
+            },
+            experimenting: {
+                title: "Innovation Expert",
+                message: "<div class='message-header'><img src='ZanNg.png' alt='Zan Ng'><span class='chat-name'>Zansei</span></div><span class='wave-emoji'>👋</span> Hi! I'm Zansei, your Innovation Expert. Since you're in experimental mode, I can help you test new marketing channels, explore cutting-edge advertising techniques, analyze emerging trends, and optimize your existing successful campaigns. With a healthy budget, we can try bold strategies! What area would you like to explore first?",
+                followUp: "Excellent! Let's get started. We just need a little bit about your current marketing setup and budget and we'll give you an Innovation Opportunities Report with cutting-edge tactics and experimental strategies worth testing.",
+                outcomes: [
+                    { icon: "🚀", title: "Emerging Channel Testing", desc: "Pilot programs for TikTok ads, connected TV, programmatic audio, and other next-gen platforms" },
+                    { icon: "🧪", title: "A/B Testing Framework", desc: "Structured experiment design for creative variations, audience segments, and channel mix" },
+                    { icon: "🤖", title: "AI & Automation Tools", desc: "Advanced attribution modeling, predictive analytics, and AI-powered optimization recommendations" },
+                    { icon: "📺", title: "Premium Channel Strategy", desc: "High-impact placements like OTT/CTV, podcast sponsorships, and premium programmatic display" },
+                    { icon: "💰", title: "Experimental Budget Allocation", desc: "Risk-managed approach: 70% proven channels, 20% testing, 10% moonshots" },
+                    { icon: "📊", title: "Advanced Analytics Setup", desc: "Custom dashboards, incrementality testing, and data infrastructure for sophisticated measurement" }
+                ]
+            }
+        };
+
+        let currentChallenge = null;
+
+        const chatContainer = document.getElementById('chatContainer');
+        const chatTitle = document.getElementById('chatTitle');
+        const chatMessages = document.querySelector('.chat-messages');
+        const outcomePreview = document.querySelector('.outcome-preview');
+        const outcomeGrid = document.getElementById('outcomeGrid');
+
+        function updateOutcomePreview(challenge) {
+            const outcomes = challenges[challenge].outcomes;
+            outcomeGrid.innerHTML = outcomes.map(outcome => `
+                <div class="outcome-item">
+                    <h4>${outcome.icon} ${outcome.title}</h4>
+                    <p>${outcome.desc}</p>
+                </div>
+            `).join('');
+        }
+
+        function loadChallenge(challenge) {
+            if (!challenges[challenge]) return;
+            
+            const challengeData = challenges[challenge];
+            currentChallenge = challenge;
+            
+            // Reset chat messages
+            // Extract message header and greeting from the message
+            const messageParts = challengeData.message.split('</div>');
+            const messageHeader = messageParts[0] + '</div>';
+            const greetingText = messageParts[1] || challengeData.message;
+            
+            chatMessages.innerHTML = `
+                <div class="message-bubble assistant">
+                    ${messageHeader}
+                    <div class="assistant-message">
+                        <p class="greeting">${greetingText}</p>
+                    </div>
+                </div>
+            `;
+            
+            // Update chat content
+            chatTitle.textContent = `${challengeData.title} | Zansei`;
+            
+            // Update outcome preview
+            updateOutcomePreview(challenge);
+        }
+
+        // Check URL hash on page load
+        function initChallenge() {
+            const hash = window.location.hash.substring(1); // Remove the #
+            if (hash && challenges[hash]) {
+                loadChallenge(hash);
+            }
+        }
+
+        // Initialize on page load
+        initChallenge();
+
+        // Listen for hash changes
+        window.addEventListener('hashchange', function() {
+            const hash = window.location.hash.substring(1);
+            if (hash && challenges[hash]) {
+                loadChallenge(hash);
+            }
+        });
+
+        // Handle send button
+        const sendBtn = document.querySelector('.send-btn');
+        const chatInput = document.querySelector('.chat-input');
+
+        function sendMessage() {
+            if (chatInput.value.trim() && currentChallenge) {
+                const userMessage = chatInput.value.trim();
+                
+                // Add user message
+                const userBubble = document.createElement('div');
+                userBubble.className = 'message-bubble user';
+                userBubble.innerHTML = `<div class="user-message">${userMessage}</div>`;
+                chatMessages.appendChild(userBubble);
+                
+                // Clear input
+                chatInput.value = '';
+                
+                // Scroll to bottom
+                chatMessages.scrollTop = chatMessages.scrollHeight;
+                
+                // Add assistant response after a brief delay
+                setTimeout(() => {
+                    const assistantBubble = document.createElement('div');
+                    assistantBubble.className = 'message-bubble assistant';
+                    assistantBubble.innerHTML = `
+                        <div class="message-header"><img src="ZanNg.png" alt="Zan Ng"><span class="chat-name">Zansei</span></div>
+                        <div class="assistant-message">
+                            <p class="greeting">${challenges[currentChallenge].followUp}</p>
+                        </div>
+                    `;
+                    chatMessages.appendChild(assistantBubble);
+                    chatMessages.scrollTop = chatMessages.scrollHeight;
+                }, 800);
+            }
+        }
+
+        sendBtn.addEventListener('click', sendMessage);
+
+        chatInput.addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                sendMessage();
+            }
+        });
+    </script>
+</body>
+</html>
