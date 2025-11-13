@@ -81,10 +81,22 @@
             line-height: 1.5;
         }
 
+        .main-content-wrapper {
+            max-width: 90%;
+            margin: 40px auto;
+            display: flex;
+            gap: 20px;
+            align-items: flex-start;
+        }
+
+        .chat-container-wrapper {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+        }
+
         .chat-container {
             background: white;
-            max-width: 1200px;
-            margin: 40px auto;
             border-radius: 16px;
             box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
             overflow: hidden;
@@ -133,12 +145,12 @@
 
         .chat-content-wrapper {
             display: flex;
-            min-height: 500px;
+            min-height: 400px;
         }
 
         .chat-messages {
             flex: 1;
-            height: 500px;
+            height: 400px;
             padding: 30px;
             background: #f7fafc;
             overflow-y: auto;
@@ -213,13 +225,14 @@
         }
 
         .outcome-preview {
-            width: 400px;
-            height: 500px;
-            background: #f7fafc;
-            border-left: 2px solid #e2e8f0;
+            width: 350px;
+            min-height:auto;
+            background: white;
+            border-radius: 16px;
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
             padding: 30px;
-            overflow-y: auto;
             display: block;
+            flex-shrink: 0;
         }
 
         .outcome-preview h3 {
@@ -317,12 +330,17 @@
             border-radius: 8px;
             cursor: pointer;
             font-size: 1rem;
-            margin: 20px auto;
             display: block;
             transition: all 0.2s;
             text-decoration: none;
-            max-width: 1200px;
             width: fit-content;
+        }
+
+        .back-btn-wrapper {
+            display: flex;
+            justify-content: center;
+            margin-top: 20px;
+            width: 100%;
         }
 
         .back-btn:hover {
@@ -331,21 +349,23 @@
         }
 
         @media (max-width: 768px) {
+            .main-content-wrapper {
+                flex-direction: column;
+            }
+
             .chat-content-wrapper {
                 flex-direction: column;
                 min-height: auto;
             }
 
             .chat-messages {
-                height: 400px;
+                height: 350px;
                 padding: 20px;
             }
 
             .outcome-preview {
                 width: 100%;
-                height: auto;
-                border-left: none;
-                border-top: 2px solid #e2e8f0;
+                padding: 20px;
             }
 
             .outcome-grid {
@@ -356,48 +376,53 @@
     </style>
 </head>
 <body>
-    <div id="chatContainer" class="chat-container">
-        <div class="chat-header">
-            <h2>
-                <img src="ZanNg.png" alt="Zan Ng" id="chatHeaderImage">
-                <span id="chatTitle">Zansei</span>
-            </h2>
-            <div class="chat-header-icons">
-                <span class="icon-btn">🕐</span>
-                <span class="icon-btn">⚙️</span>
-            </div>
-        </div>
-        
-        <div class="chat-content-wrapper">
-            <div class="chat-messages">
-                <div class="message-bubble assistant">
-                    <div class="message-header"><img src="ZanNg.png" alt="Zan Ng"><span class="chat-name">Zansei</span></div>
-                    <div class="assistant-message">
-                        <p class="greeting">
-                            <span class="wave-emoji">👋</span> Hi! I'm Zansei, your AI advertising consultant. I can help you create effective marketing strategies, analyze your business, generate creative ad concepts, and plan your advertising budget. What would you like to start with?
-                        </p>
+    <div class="main-content-wrapper">
+        <div class="chat-container-wrapper">
+            <div id="chatContainer" class="chat-container">
+                <div class="chat-header">
+                    <h2>
+                        <span id="chatTitle">Zansei</span>
+                    </h2>
+                    <div class="chat-header-icons">
+                        <span class="icon-btn">🕐</span>
+                        <span class="icon-btn">⚙️</span>
                     </div>
                 </div>
-            </div>
-            
-            <div class="outcome-preview">
-                <h3>📊 Your Report Will Include:</h3>
-                <div class="outcome-grid" id="outcomeGrid">
-                    <!-- Dynamically populated based on selected challenge -->
+                
+                <div class="chat-content-wrapper">
+                    <div class="chat-messages">
+                        <div class="message-bubble assistant">
+                            <div class="message-header"><img src="ZanNg.png" alt="Zan Ng"><span class="chat-name">Zansei</span></div>
+                            <div class="assistant-message">
+                                <p class="greeting">
+                                    <span class="wave-emoji">👋</span> Hi! I'm Zansei, your AI advertising consultant. I can help you create effective marketing strategies, analyze your business, generate creative ad concepts, and plan your advertising budget. What would you like to start with?
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="chat-input-area">
+                    <input 
+                        type="text" 
+                        class="chat-input" 
+                        placeholder="Ask Zansei about marketing strategies, ad creation, or business insights..."
+                    />
+                    <button class="send-btn">↑</button>
                 </div>
             </div>
+            <div class="back-btn-wrapper">
+                <a href="index.html#diagnostic" class="back-btn">← Back to Assessment</a>
+            </div>
         </div>
-        
-        <div class="chat-input-area">
-            <input 
-                type="text" 
-                class="chat-input" 
-                placeholder="Ask Zansei about marketing strategies, ad creation, or business insights..."
-            />
-            <button class="send-btn">↑</button>
+    
+    <div class="outcome-preview">
+        <h3>📊 Your Report Will Include:</h3>
+        <div class="outcome-grid" id="outcomeGrid">
+            <!-- Dynamically populated based on selected challenge -->
         </div>
     </div>
-    <a href="index.html#diagnostic" class="back-btn">← Back to Assessment</a>
+    </div>
 
 
     <script>
